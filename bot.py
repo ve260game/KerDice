@@ -1,7 +1,11 @@
 import discord
 from discord.ext import commands
+import json
 
-bot = commands.Bot(command_prefix= '[')
+with open('KerDice\setting.json', mode='r', encoding='UTF-8') as jfile: 
+    jdata = json.load(jfile) #jdata等於setting文件
+
+bot = commands.Bot(command_prefix= '[') 
 
 @bot.event
 async def on_ready():
@@ -10,17 +14,18 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    channel =bot.get_channel(630749684775780352)
+    channel =bot.get_channel(int(jdata['Welcome_channel']))
     await channel.send(f'{member} join!')
 
 @bot.event
 async def on_member_remove(menber):
-    channel =bot.get_channel(630749684775780352)
+    channel =bot.get_channel(int(jdata['Welcome_channel']))
     await channel.send(f'{member} leave!')
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f'{round(bot.latency*1000)} (ms)')
+    channel =bot.get_channel(int(jdata['Welcome_channel']))
+    await channel.send('leave!')
+    await ctx.send(f'{round(bot.latency*1000)} ms')
 
-bot.run('NjMwNDM0OTM1MDg1MzM0NTI4.XZoXdA.TvVZ8EEqQrA9XJ3I4G7ywOxJ71I')
-
+bot.run(jdata['TOKEN'])
